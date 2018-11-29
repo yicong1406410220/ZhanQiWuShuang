@@ -7,10 +7,8 @@ public class DataManager : Singleton<DataManager>
 
     public DataManager()
     {
-        
+        Debug.Log("你好");
     }
-
-
 
     public void SaveDBKey(string key, float value)
     {
@@ -41,6 +39,5 @@ public class DataManager : Singleton<DataManager>
     {
         return PlayerPrefs.GetString(key, value);
     }
-
 
 }
