@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class DataManager : Singleton<DataManager>
@@ -8,9 +10,10 @@ public class DataManager : Singleton<DataManager>
     public DataManager()
     {
         Debug.Log("你好");
+        ParsingCSV(CSV_nii, "nii");
     }
 
-    public Dictionary<string, Dictionary<string, string>> CSV_nni = new Dictionary<string, Dictionary<string, string>>();
+    public Dictionary<string, Dictionary<string, string>> CSV_nii = new Dictionary<string, Dictionary<string, string>>();
 
 
     public void SaveDBKey(string key, float value)
@@ -46,8 +49,9 @@ public class DataManager : Singleton<DataManager>
     public void ParsingCSV(Dictionary<string, Dictionary<string,string>> DDC, string path)
     {
         TextAsset textAsset = Resources.Load<TextAsset>("Data/csv/" + path);
-        string Text = textAsset.text;
-        string[] Textrows = Text.Split('\n');
+        string TextAll = textAsset.text;
+        TextAll = TextAll.Remove(TextAll.LastIndexOf("\r\n"), 1);
+        string[] Textrows = TextAll.Split(new string[] { "\r\n" }, StringSplitOptions.None);
         string[] Textcolname = Textrows[1].Split(',');
         string[,] TextRCS = new string[Textrows.Length, Textcolname.Length];
         for (int i = 0; i < Textrows.Length; i++)
@@ -59,20 +63,40 @@ public class DataManager : Singleton<DataManager>
             }
         }
 
-        for (int i = 0; i < Textrows.Length; i++)
-        {
-            Dictionary<string, string> Dic = new Dictionary<string, string>();            
+        for (int i = 2; i < Textrows.Length; i++)
+        {         
             for (int j = 1; j < Textcolname.Length -1; j++)
             {
-                //Dic.Add(Textcolname[1], )
+                SetDDC(TextRCS[i, 0], Textcolname[j], TextRCS[i, j], DDC);
             }
-
-            Dic.Clear();
         }
-
-
-
     }
 
+    /// <summary>
+    /// 赋值
+    /// </summary>
+    public void SetDDC(string key1, string key2, string value, Dictionary<string, Dictionary<string, string>> mDict1)
+    {
+        if (mDict1.ContainsKey(key1))
+        {
+            var dict2 = mDict1[key1];
+            if (dict2.ContainsKey(key2))
+            {
+                //dict2[key2] = value;
+                Debug.LogError("重复赋值：" + dict2[key2]);
+            }
+            else
+            {
+                dict2.Add(key2, value);
+            }
+
+        }
+        else
+        {
+            var dict2 = new Dictionary<string, string>();
+            dict2.Add(key2, value);
+            mDict1.Add(key1, dict2);
+        }
+    }
 
 }

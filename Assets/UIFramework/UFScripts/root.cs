@@ -9,7 +9,8 @@ public class root : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         PanelMgr.instance.OpenPanel<TitlePanel>("");
-        //DataManager.Instance.SaveDBKey("we", "laji");
+        Debug.Log(DataManager.Instance.CSV_nii["1"]["name"]);
+        
     }
 	
 	// Update is called once per frame
