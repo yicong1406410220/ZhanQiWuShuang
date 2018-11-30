@@ -10,6 +10,9 @@ public class DataManager : Singleton<DataManager>
         Debug.Log("你好");
     }
 
+    public Dictionary<string, Dictionary<string, string>> CSV_nni = new Dictionary<string, Dictionary<string, string>>();
+
+
     public void SaveDBKey(string key, float value)
     {
         PlayerPrefs.SetFloat(key, value);
@@ -39,5 +42,37 @@ public class DataManager : Singleton<DataManager>
     {
         return PlayerPrefs.GetString(key, value);
     }
+
+    public void ParsingCSV(Dictionary<string, Dictionary<string,string>> DDC, string path)
+    {
+        TextAsset textAsset = Resources.Load<TextAsset>("Data/csv/" + path);
+        string Text = textAsset.text;
+        string[] Textrows = Text.Split('\n');
+        string[] Textcolname = Textrows[1].Split(',');
+        string[,] TextRCS = new string[Textrows.Length, Textcolname.Length];
+        for (int i = 0; i < Textrows.Length; i++)
+        {
+            string[] Textcols = Textrows[i].Split(',');
+            for (int j = 0; j < Textcolname.Length; j++)
+            {
+                TextRCS[i, j] = Textcols[j];
+            }
+        }
+
+        for (int i = 0; i < Textrows.Length; i++)
+        {
+            Dictionary<string, string> Dic = new Dictionary<string, string>();            
+            for (int j = 1; j < Textcolname.Length -1; j++)
+            {
+                //Dic.Add(Textcolname[1], )
+            }
+
+            Dic.Clear();
+        }
+
+
+
+    }
+
 
 }
